@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0f1511">
+  <meta name="color-scheme" content="dark light">
+  <meta name="description" content="砺炼：面向健康成年人的循证健身知识、AI问答与训练记录工具">
+  <title>砺炼</title>
+  <script type="module" crossorigin src="./assets/index-Dra6qRw7.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-C4NkXCSD.css">
+</head>
+<body>
+  <div class="app" id="app" aria-busy="true">
+    <header class="topbar">
+      <button class="brand" data-view="home" aria-label="返回首页"><span>砺</span><b>砺炼</b></button>
+      <div class="top-status"><i></i><span id="topStatus">正在载入本机知识</span></div>
+    </header>
+
+    <main class="main-shell">
+      <section class="view active" id="homeView" aria-labelledby="homeTitle">
+        <div class="hero">
+          <p class="eyebrow">EVIDENCE · TRAIN · REVIEW</p>
+          <h1 id="homeTitle">把每一次训练，<br><em>练得更明白。</em></h1>
+          <p>先看依据，再生成计划；完成每一组，留下可以复盘的记录。</p>
+          <div class="hero-stats">
+            <div><strong id="knowledgeCount">—</strong><small>已审核内容</small></div>
+            <div><strong id="planCount">0</strong><small>本机计划</small></div>
+            <div><strong id="sessionCount">0</strong><small>训练记录</small></div>
+          </div>
+        </div>
+
+        <section class="card chat-card" aria-labelledby="advisorTitle">
+          <div class="card-head">
+            <div><span class="section-label">AI ADVISOR</span><h2 id="advisorTitle">砺炼顾问</h2></div>
+            <span class="provider-chip" id="activeProvider">本地检索</span>
+          </div>
+          <div class="messages" id="messages" aria-live="polite">
+            <article class="message assistant"><span class="avatar">砺</span><div class="bubble">你好。我会先查找本机已审核知识，再回答训练、动作、营养与恢复问题。</div></article>
+          </div>
+          <div class="quick-prompts" id="quickPrompts">
+            <button>每周三练怎么安排？</button><button>如何判断接近力竭？</button><button>蛋白质应该吃多少？</button>
+          </div>
+          <form class="composer" id="chatForm">
+            <textarea id="chatInput" maxlength="5000" rows="2" placeholder="输入健康成人训练问题…" aria-label="输入健身问题"></textarea>
+            <button class="send-button" type="submit" aria-label="发送问题">↑</button>
+          </form>
+          <p class="boundary-copy">仅面向18岁以上健康成年人，不提供疼痛、伤病或康复建议。</p>
+          <details class="sources-panel" id="sourcesPanel"><summary>本轮知识依据 <span id="sourceCount">0</span></summary><div id="sourceList"></div></details>
+        </section>
+
+        <section class="section-block" aria-labelledby="plansTitle">
+          <div class="section-head"><div><span class="section-label">YOUR PLAN</span><h2 id="plansTitle">训练计划</h2></div><button class="button primary" id="generatePlan">AI 生成计划</button></div>
+          <div class="plan-list" id="planList"></div>
+        </section>
+      </section>
+
+      <section class="view" id="knowledgeView" aria-labelledby="knowledgeTitle">
+        <div class="page-heading"><span class="section-label">OFFLINE KNOWLEDGE</span><h1 id="knowledgeTitle">本机知识库</h1><p>安装包只包含通过人工审核的健康成人内容。</p></div>
+        <label class="search-box"><span>⌕</span><input id="knowledgeSearch" type="search" placeholder="搜索训练、动作、营养或证据" autocomplete="off"></label>
+        <div class="filter-chips" id="knowledgeFilters" aria-label="知识分类"></div>
+        <div class="knowledge-meta"><span id="contentVersion">内容版本 —</span><span id="knowledgeResultCount">0 篇</span></div>
+        <div class="knowledge-list" id="knowledgeList"></div>
+      </section>
+
+      <section class="view" id="trainingView" aria-labelledby="trainingTitle">
+        <div class="page-heading"><span class="section-label">TRAINING LOG</span><h1 id="trainingTitle">本次训练</h1><p id="workoutStartedAt">添加第一组后开始计时</p></div>
+        <div class="training-stats">
+          <div><strong id="workoutSetCount">0</strong><span>组</span></div><div><strong id="workoutExerciseCount">0</strong><span>动作</span></div><div><strong id="workoutVolume">0</strong><span>kg 容量</span></div>
+        </div>
+
+        <section class="card timer-card">
+          <div><span class="section-label">REST TIMER</span><div class="timer-display" id="timerDisplay" role="timer" aria-live="polite">01:30</div></div>
+          <div class="timer-presets" id="timerPresets"><button data-seconds="60">60秒</button><button class="active" data-seconds="90">90秒</button><button data-seconds="120">2分钟</button><button data-seconds="180">3分钟</button></div>
+          <div class="timer-actions"><button class="button primary" id="timerToggle">开始</button><button class="button ghost" id="timerReset">重置</button></div>
+        </section>
+
+        <form class="card set-form" id="setForm">
+          <div class="card-head"><div><span class="section-label">ADD SET</span><h2>添加训练组</h2></div></div>
+          <label class="full">动作<input id="exerciseName" list="exerciseOptions" maxlength="50" required placeholder="选择或输入动作"></label>
+          <datalist id="exerciseOptions"></datalist>
+          <div class="field-row"><label>重量 kg<input id="setWeight" type="number" min="0" max="1000" step="0.5" value="0"></label><label>次数<input id="setReps" type="number" min="1" max="1000" value="10" required></label><label>组数<input id="setCopies" type="number" min="1" max="10" value="1" required></label></div>
+          <button class="button primary full" type="submit">＋ 添加</button>
+        </form>
+
+        <div class="set-list" id="setList" aria-live="polite"></div>
+        <div class="session-actions"><button class="button ghost danger" id="clearWorkout">清空本次</button><button class="button dark" id="finishWorkout">结束并保存</button></div>
+
+        <section class="section-block">
+          <div class="section-head"><div><span class="section-label">EXERCISES</span><h2>动作库</h2></div><input class="compact-search" id="exerciseSearch" type="search" placeholder="搜索动作"></div>
+          <div class="filter-chips" id="exerciseFilters"></div><div class="exercise-grid" id="exerciseLibrary"></div>
+        </section>
+
+        <section class="section-block"><div class="section-head"><div><span class="section-label">HISTORY</span><h2>训练历史</h2></div></div><div id="workoutHistory" class="history-list"></div></section>
+      </section>
+
+      <section class="view" id="profileView" aria-labelledby="profileTitle">
+        <div class="page-heading"><span class="section-label">LOCAL PROFILE</span><h1 id="profileTitle">我的</h1><p>档案、计划和训练记录只保存在当前设备。</p></div>
+
+        <form class="card profile-form" id="profileForm">
+          <div class="card-head"><div><span class="section-label">PROFILE</span><h2>训练档案</h2></div><span id="profileState" class="muted">未保存</span></div>
+          <div class="field-grid">
+            <label>称呼<input name="name" maxlength="20" placeholder="选填"></label>
+            <label>年龄<input name="age" type="number" min="18" max="80" required placeholder="28"></label>
+            <label>身高 cm<input name="height" type="number" min="120" max="230" placeholder="175"></label>
+            <label>体重 kg<input name="weight" type="number" min="35" max="250" step="0.1" placeholder="70"></label>
+            <label>训练经验<select name="experience" required><option value="">请选择</option><option>不足6个月</option><option>6–18个月</option><option>1.5–3年</option><option>3年以上</option></select></label>
+            <label>主要目标<select name="goal" required><option value="">请选择</option><option>增肌</option><option>提升力量</option><option>减脂并保留肌肉</option><option>改善一般体能</option></select></label>
+            <label>每周天数<select name="days" required><option value="">请选择</option><option value="2">2天</option><option value="3">3天</option><option value="4">4天</option><option value="5">5天</option><option value="6">6天</option></select></label>
+            <label>单次时长<select name="duration" required><option value="">请选择</option><option>30–45分钟</option><option>45–60分钟</option><option>60–90分钟</option><option>90分钟以上</option></select></label>
+            <label class="full">可用器械<textarea name="equipment" rows="3" maxlength="300" placeholder="例如：商业健身房；或哑铃和训练凳"></textarea></label>
+          </div>
+          <label class="check-row"><input name="healthy" type="checkbox" required><span><b>我是18岁以上、目前无疼痛和康复需求的健康成年人</b><small>不符合时，请先咨询合格专业人士。</small></span></label>
+          <button class="button primary full" type="submit">保存档案</button>
+        </form>
+
+        <section class="card api-card" aria-labelledby="apiTitle">
+          <div class="card-head"><div><span class="section-label">MODEL CONNECTION</span><h2 id="apiTitle">我的模型 API</h2></div><span class="secure-badge">本机安全存储</span></div>
+          <label>服务商<select id="providerSelect"></select></label>
+          <label>模型<select id="modelSelect"></select></label>
+          <label>API Key<input id="apiKey" type="password" maxlength="500" autocomplete="off" placeholder="已保存的 Key 不会回显"></label>
+          <label class="check-row consent"><input id="providerConsent" type="checkbox"><span><b>我同意直接发送给所选服务商</b><small id="consentText">问题、命中的知识片段、计划所需档案字段，以及自动训练分析所需的目标和训练记录会发送给服务商；砺炼不经过自有服务器。</small></span></label>
+          <div class="api-actions"><button class="button ghost" id="getApiKey" type="button">获取 Key</button><button class="button ghost" id="testApi" type="button">测试连接</button><button class="button primary" id="saveApi" type="button">保存</button></div>
+          <p id="apiResult" class="inline-result" aria-live="polite"></p>
+        </section>
+
+        <section class="card settings-card">
+          <div class="setting-row"><div><b>后台计时提醒</b><small>休息结束时显示本地通知并震动</small></div><label class="switch"><input id="notificationToggle" type="checkbox"><span></span></label></div>
+          <div class="setting-row"><div><b>知识包</b><small id="settingsContentVersion">随应用版本更新</small></div></div>
+          <button class="text-button" id="privacyButton" type="button">隐私说明与内容边界</button>
+          <button class="text-button danger" id="clearAllData" type="button">清除全部本机数据与 API Key</button>
+        </section>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="主要功能">
+      <button class="active" data-view="home"><span>✦</span><b>首页</b></button>
+      <button data-view="knowledge"><span>▤</span><b>知识</b></button>
+      <button data-view="training"><span>◫</span><b>训练</b></button>
+      <button data-view="profile"><span>◎</span><b>我的</b></button>
+    </nav>
+  </div>
+
+  <dialog id="knowledgeDialog" class="sheet-dialog"><article><button class="dialog-close" data-close-dialog aria-label="关闭">×</button><div id="knowledgeArticle"></div></article></dialog>
+  <dialog id="privacyDialog" class="sheet-dialog"><article><button class="dialog-close" data-close-dialog aria-label="关闭">×</button><span class="section-label">PRIVACY & BOUNDARY</span><h2>隐私说明与内容边界</h2><p>档案、计划、训练记录和分析报告保存在本机。API Key 存入系统安全存储，仅在调用所选模型时作为鉴权信息发送给该服务商。</p><p>取得新版同意后，AI 请求会将问题、命中的已审核知识片段、计划所需档案字段，以及训练结束后自动分析所需的目标和训练记录直接发送给所选服务商。砺炼不建立账号、不经过自有服务器、不含广告或行为分析。</p><p>本应用只面向18岁以上健康成年人，不提供疾病、疼痛、伤病、术后、慢病、孕产或康复建议，也不替代医生、营养师或其他专业人士。</p></article></dialog>
+  <div class="toast" id="toast" role="status"></div>
+</body>
+</html>

@@ -1,0 +1,33 @@
+{
+  "name": "fitness-knowledge-web",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "content:build": "node tools/build_mobile_content.mjs",
+    "content:check": "node tools/build_mobile_content.mjs --check",
+    "dev": "npm run content:build && vite --config fitness-web/vite.config.js",
+    "build": "npm run content:build && vite build --config fitness-web/vite.config.js",
+    "test": "node --test fitness-web/test/*.test.mjs && npm run content:check && node fitness-web/server.mjs --self-test",
+    "release:check": "npm test && pwsh -NoProfile -File ./tools/validate_vault.ps1 && node tools/check_mobile_release.mjs",
+    "cap:sync": "npm run build && cap sync",
+    "cap:android": "npm run build && cap sync android",
+    "cap:ios": "npm run build && cap sync ios"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.5.0",
+    "fake-indexeddb": "^6.2.4",
+    "vite": "^8.2.2"
+  },
+  "dependencies": {
+    "@aparajita/capacitor-secure-storage": "^8.0.0",
+    "@capacitor/android": "^8.5.0",
+    "@capacitor/browser": "^8.0.4",
+    "@capacitor/core": "^8.5.0",
+    "@capacitor/haptics": "^8.0.2",
+    "@capacitor/ios": "^8.5.0",
+    "@capacitor/local-notifications": "^8.3.1",
+    "@capacitor/preferences": "^8.0.1",
+    "marked": "^18.0.10",
+    "sanitize-html": "^2.17.0"
+  }
+}
