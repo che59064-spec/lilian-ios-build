@@ -7,8 +7,8 @@
   <meta name="color-scheme" content="dark light">
   <meta name="description" content="砺炼：面向健康成年人的循证健身知识、AI问答与训练记录工具">
   <title>砺炼</title>
-  <script type="module" crossorigin src="./assets/index-Dra6qRw7.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-C4NkXCSD.css">
+  <script type="module" crossorigin src="./assets/index-CID1Ag-q.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-d0UKZz0H.css">
 </head>
 <body>
   <div class="app" id="app" aria-busy="true">
@@ -24,15 +24,32 @@
           <h1 id="homeTitle">把每一次训练，<br><em>练得更明白。</em></h1>
           <p>先看依据，再生成计划；完成每一组，留下可以复盘的记录。</p>
           <div class="hero-stats">
-            <div><strong id="knowledgeCount">—</strong><small>已审核内容</small></div>
+            <div><strong id="knowledgeCount">—</strong><small>本机资料</small></div>
             <div><strong id="planCount">0</strong><small>本机计划</small></div>
             <div><strong id="sessionCount">0</strong><small>训练记录</small></div>
           </div>
         </div>
 
-        <section class="card chat-card" aria-labelledby="advisorTitle">
+        <section class="section-block" aria-labelledby="plansTitle">
+          <div class="section-head"><div><span class="section-label">YOUR PLAN</span><h2 id="plansTitle">训练计划</h2></div><button class="button primary" id="generatePlan">AI 生成计划</button></div>
+          <div class="plan-list" id="planList"></div>
+        </section>
+      </section>
+
+      <section class="view" id="aiView" aria-labelledby="advisorTitle">
+        <div class="ai-hero">
+          <div class="ai-mascot" role="img" aria-label="AI 助手待命" data-state="idle">
+            <img class="mascot-idle" src="./ai-mascot/dumbbell-idle.png" alt="" draggable="false">
+            <img class="mascot-active" src="./ai-mascot/dumbbell-active.png" alt="" draggable="false">
+          </div>
+          <span class="section-label">LILIAN INTELLIGENCE</span>
+          <h1 id="advisorTitle">今天想练什么？</h1>
+          <p>先检索本机已审核知识，再由你选择的模型回答。</p>
+        </div>
+
+        <section class="card chat-card ai-chat-card">
           <div class="card-head">
-            <div><span class="section-label">AI ADVISOR</span><h2 id="advisorTitle">砺炼顾问</h2></div>
+            <div><span class="section-label">AI ADVISOR</span><h2>砺炼顾问</h2></div>
             <span class="provider-chip" id="activeProvider">本地检索</span>
           </div>
           <div class="messages" id="messages" aria-live="polite">
@@ -48,15 +65,10 @@
           <p class="boundary-copy">仅面向18岁以上健康成年人，不提供疼痛、伤病或康复建议。</p>
           <details class="sources-panel" id="sourcesPanel"><summary>本轮知识依据 <span id="sourceCount">0</span></summary><div id="sourceList"></div></details>
         </section>
-
-        <section class="section-block" aria-labelledby="plansTitle">
-          <div class="section-head"><div><span class="section-label">YOUR PLAN</span><h2 id="plansTitle">训练计划</h2></div><button class="button primary" id="generatePlan">AI 生成计划</button></div>
-          <div class="plan-list" id="planList"></div>
-        </section>
       </section>
 
       <section class="view" id="knowledgeView" aria-labelledby="knowledgeTitle">
-        <div class="page-heading"><span class="section-label">OFFLINE KNOWLEDGE</span><h1 id="knowledgeTitle">本机知识库</h1><p>安装包只包含通过人工审核的健康成人内容。</p></div>
+        <div class="page-heading"><span class="section-label">OFFLINE KNOWLEDGE</span><h1 id="knowledgeTitle">本机知识库</h1><p>包括已核验内容、专业草案、学术来源草案和经整理的创作者观点；每条资料都会显示审核状态。</p></div>
         <label class="search-box"><span>⌕</span><input id="knowledgeSearch" type="search" placeholder="搜索训练、动作、营养或证据" autocomplete="off"></label>
         <div class="filter-chips" id="knowledgeFilters" aria-label="知识分类"></div>
         <div class="knowledge-meta"><span id="contentVersion">内容版本 —</span><span id="knowledgeResultCount">0 篇</span></div>
@@ -64,7 +76,79 @@
       </section>
 
       <section class="view" id="trainingView" aria-labelledby="trainingTitle">
-        <div class="page-heading"><span class="section-label">TRAINING LOG</span><h1 id="trainingTitle">本次训练</h1><p id="workoutStartedAt">添加第一组后开始计时</p></div>
+        <div class="page-heading"><span class="section-label">TRAINING</span><h1 id="trainingTitle">训练</h1><p id="trainingModeDescription">正常训练与健美备赛独立记录，互不混用。</p></div>
+
+        <nav class="training-mode-switch" id="trainingModeSwitch" aria-label="选择训练模式">
+          <button class="training-mode-button active" type="button" data-training-mode="workout" aria-controls="normalTrainingPanel" aria-pressed="true"><b>正常训练</b><small>组数、动作、计时与历史</small></button>
+          <button class="training-mode-button" type="button" data-training-mode="prep" aria-controls="contestPrepPanel" aria-pressed="false"><b>健美备赛</b><small>AI计划、阶段数轴与赛周指南</small></button>
+        </nav>
+
+        <div class="training-mode-panel" id="contestPrepPanel" hidden>
+        <section class="card prep-card" id="contestPrep" aria-labelledby="prepTitle">
+          <div class="card-head">
+            <div><span class="section-label">CONTEST PREP</span><h2 id="prepTitle">备赛指南</h2></div>
+            <span class="provider-chip" id="prepStatus">未制定</span>
+          </div>
+          <p class="prep-lead">把减脂、训练、有氧、恢复、造型、Peak Week 和赛后恢复放进同一条可跟踪时间轴。AI 会结合你的本机档案和备赛现状生成初稿。</p>
+
+          <details class="prep-guide">
+            <summary>先看全流程安全指南</summary>
+            <div class="prep-guide-grid">
+              <article><b>减脂与饮食</b><p>用七日均重、围度、照片和训练表现看趋势；只在连续趋势偏离时小幅调整，不靠单日体重追赶进度。</p></article>
+              <article><b>力量训练与有氧</b><p>尽量保留熟悉动作和可恢复的训练刺激；有氧与步数逐步调整，避免同时大砍饮食和训练量。</p></article>
+              <article><b>恢复与检查</b><p>固定记录睡眠、饥饿、疲劳、训练表现和饮食执行度。出现明显风险信号时停止自行推进并寻求专业评估。</p></article>
+              <article><b>脱水、水钠与充碳</b><p>说明水负荷、限水、控盐、出汗脱水与利尿剂为什么可能失效或让肌肉变扁。默认不主动脱水，保持熟悉且稳定的水钠。</p></article>
+              <article><b>造型与赛务</b><p>提前练习强制动作、转体、舞台动线和呼吸；比赛日前完成报名、证件、服装、肤色、餐食与交通清单。</p></article>
+              <article><b>赛后恢复</b><p>比赛不是计划终点。继续监测饮食、体重、训练、情绪与身体状态，按预先安排恢复日常节奏。</p></article>
+            </div>
+          </details>
+
+          <details class="prep-library" id="prepLibrary" open>
+            <summary><span>备赛资料库</span><small id="prepKnowledgeTotal">正在载入…</small></summary>
+            <p class="prep-library-boundary">指南与论文草案会以“待复核”背景用于备赛 AI；创作者视频是待审核来源，不等于事实结论，也不会发送给 AI。</p>
+            <label class="search-box prep-search"><span>⌕</span><input id="prepKnowledgeSearch" type="search" placeholder="搜索减脂、训练、脱水、充碳、造型或创作者" autocomplete="off"></label>
+            <div class="filter-chips prep-filters" id="prepKnowledgeFilters" aria-label="备赛资料分类"></div>
+            <div class="knowledge-meta"><span id="prepKnowledgeState">0 条资料</span><span>最多显示 60 条</span></div>
+            <div class="prep-knowledge-list" id="prepKnowledgeList"></div>
+          </details>
+
+          <section id="prepPlan" hidden>
+            <div class="prep-overview"><span class="section-label">AI ANALYSIS</span><p id="prepOverview"></p><small id="prepWeeklyTarget"></small></div>
+            <div class="prep-actions"><button class="button primary" id="startContestPrep" type="button">开始备赛</button><button class="button ghost" id="editContestPrep" type="button">更新资料</button></div>
+            <div class="prep-current" id="prepCurrent" aria-live="polite"></div>
+            <div class="prep-timeline" id="prepTimeline" aria-label="备赛阶段时间轴"></div>
+            <article class="prep-stage-detail" id="prepStageDetail"></article>
+            <div class="prep-monitoring"><b>每周固定复盘</b><ul id="prepMonitoring"></ul></div>
+            <p class="boundary-copy" id="prepSourceNotice" hidden>本计划包含待复核草案依据；相关内容已按保守背景使用，不代表已核验结论。</p>
+            <div class="analysis-sources" id="prepSources"></div>
+          </section>
+
+          <details class="prep-builder" id="prepBuilder" open>
+            <summary>根据自身情况做 AI 分析</summary>
+            <form id="prepForm" class="prep-form">
+              <div class="field-grid">
+                <label>比赛日期<input name="competitionDate" type="date" required></label>
+                <label>比赛组别<select name="category" required><option value="">请选择</option><option>男子健体</option><option>古典健美</option><option>健美</option><option>女子比基尼</option><option>女子形体</option><option>其他赛事组别</option></select></label>
+                <label>参赛经验<select name="competitionExperience" required><option value="">请选择</option><option>首次参赛</option><option>参加过1–2场</option><option>参加过3场以上</option></select></label>
+                <label>当前体重 kg<input name="currentWeight" type="number" min="35" max="250" step="0.1" required></label>
+                <label>估计体脂率 %<input name="bodyFat" type="number" min="3" max="60" step="0.5" placeholder="选填，仅作粗略背景"></label>
+                <label>近4周每周体重变化 kg<input name="weeklyChange" type="number" min="-5" max="5" step="0.1" placeholder="下降填负数；选填"></label>
+                <label>当前日均热量 kcal<input name="calories" type="number" min="500" max="10000" step="10" placeholder="选填"></label>
+                <label>当前日均步数<input name="steps" type="number" min="0" max="100000" step="100" placeholder="选填"></label>
+                <label>每周有氧分钟<input name="cardioMinutes" type="number" min="0" max="1200" step="5" placeholder="选填"></label>
+                <label>平均睡眠小时<input name="sleepHours" type="number" min="3" max="12" step="0.5" placeholder="选填"></label>
+                <label class="full">当前执行情况与限制<textarea name="notes" rows="3" maxlength="500" placeholder="例如：工作日可备餐、周末训练；不要填写诊断或详细医疗信息"></textarea></label>
+              </div>
+              <label class="check-row"><input name="safetyReady" type="checkbox" required><span><b>我符合健康成年人范围，且当前没有需要医疗评估或进食障碍支持的情况</b><small>不符合时不会把备赛资料发送给模型。备赛计划不是医疗或临床营养处方。</small></span></label>
+              <button class="button primary full" id="generatePrepPlan" type="submit">AI 分析并生成备赛计划</button>
+              <p class="boundary-copy">只发送完成分析所需的档案与备赛字段；计划保存在当前设备。比赛少于8周时不会用极端方法“赶进度”。</p>
+            </form>
+          </details>
+        </section>
+        </div>
+
+        <div class="training-mode-panel" id="normalTrainingPanel">
+        <div class="mode-panel-heading"><span class="section-label">NORMAL TRAINING</span><h2>正常训练</h2><p id="workoutStartedAt">添加第一组后开始计时</p></div>
         <div class="training-stats">
           <div><strong id="workoutSetCount">0</strong><span>组</span></div><div><strong id="workoutExerciseCount">0</strong><span>动作</span></div><div><strong id="workoutVolume">0</strong><span>kg 容量</span></div>
         </div>
@@ -92,6 +176,7 @@
         </section>
 
         <section class="section-block"><div class="section-head"><div><span class="section-label">HISTORY</span><h2>训练历史</h2></div></div><div id="workoutHistory" class="history-list"></div></section>
+        </div>
       </section>
 
       <section class="view" id="profileView" aria-labelledby="profileTitle">
@@ -119,13 +204,13 @@
           <label>服务商<select id="providerSelect"></select></label>
           <label>模型<select id="modelSelect"></select></label>
           <label>API Key<input id="apiKey" type="password" maxlength="500" autocomplete="off" placeholder="已保存的 Key 不会回显"></label>
-          <label class="check-row consent"><input id="providerConsent" type="checkbox"><span><b>我同意直接发送给所选服务商</b><small id="consentText">问题、命中的知识片段、计划所需档案字段，以及自动训练分析所需的目标和训练记录会发送给服务商；砺炼不经过自有服务器。</small></span></label>
+          <label class="check-row consent"><input id="providerConsent" type="checkbox"><span><b>我同意直接发送给所选服务商</b><small id="consentText">问题、命中的知识片段、训练与备赛计划所需档案字段，以及自动训练分析所需的目标和训练记录会发送给服务商；砺炼不经过自有服务器。</small></span></label>
           <div class="api-actions"><button class="button ghost" id="getApiKey" type="button">获取 Key</button><button class="button ghost" id="testApi" type="button">测试连接</button><button class="button primary" id="saveApi" type="button">保存</button></div>
           <p id="apiResult" class="inline-result" aria-live="polite"></p>
         </section>
 
         <section class="card settings-card">
-          <div class="setting-row"><div><b>后台计时提醒</b><small>休息结束时显示本地通知并震动</small></div><label class="switch"><input id="notificationToggle" type="checkbox"><span></span></label></div>
+          <div class="setting-row"><div><b>锁屏倒计时</b><small>锁屏实时显示剩余休息时间，结束时通知并震动</small></div><label class="switch"><input id="notificationToggle" type="checkbox"><span></span></label></div>
           <div class="setting-row"><div><b>知识包</b><small id="settingsContentVersion">随应用版本更新</small></div></div>
           <button class="text-button" id="privacyButton" type="button">隐私说明与内容边界</button>
           <button class="text-button danger" id="clearAllData" type="button">清除全部本机数据与 API Key</button>
@@ -136,13 +221,14 @@
     <nav class="bottom-nav" aria-label="主要功能">
       <button class="active" data-view="home"><span>✦</span><b>首页</b></button>
       <button data-view="knowledge"><span>▤</span><b>知识</b></button>
+      <button class="ai-tab" data-view="ai" aria-label="AI 提问"><span class="nav-mascot" aria-hidden="true"><img class="mascot-idle" src="./ai-mascot/dumbbell-idle.png" alt=""><img class="mascot-active" src="./ai-mascot/dumbbell-active.png" alt=""></span><b>AI</b></button>
       <button data-view="training"><span>◫</span><b>训练</b></button>
       <button data-view="profile"><span>◎</span><b>我的</b></button>
     </nav>
   </div>
 
   <dialog id="knowledgeDialog" class="sheet-dialog"><article><button class="dialog-close" data-close-dialog aria-label="关闭">×</button><div id="knowledgeArticle"></div></article></dialog>
-  <dialog id="privacyDialog" class="sheet-dialog"><article><button class="dialog-close" data-close-dialog aria-label="关闭">×</button><span class="section-label">PRIVACY & BOUNDARY</span><h2>隐私说明与内容边界</h2><p>档案、计划、训练记录和分析报告保存在本机。API Key 存入系统安全存储，仅在调用所选模型时作为鉴权信息发送给该服务商。</p><p>取得新版同意后，AI 请求会将问题、命中的已审核知识片段、计划所需档案字段，以及训练结束后自动分析所需的目标和训练记录直接发送给所选服务商。砺炼不建立账号、不经过自有服务器、不含广告或行为分析。</p><p>本应用只面向18岁以上健康成年人，不提供疾病、疼痛、伤病、术后、慢病、孕产或康复建议，也不替代医生、营养师或其他专业人士。</p></article></dialog>
+  <dialog id="privacyDialog" class="sheet-dialog"><article><button class="dialog-close" data-close-dialog aria-label="关闭">×</button><span class="section-label">PRIVACY & BOUNDARY</span><h2>隐私说明与内容边界</h2><p>档案、训练计划、备赛计划、训练记录和分析报告保存在本机。API Key 存入系统安全存储，仅在调用所选模型时作为鉴权信息发送给该服务商。</p><p>取得新版同意后，AI 请求会将问题、命中的知识片段、训练或备赛计划所需档案与备赛字段，以及训练结束后自动分析所需的目标和训练记录直接发送给所选服务商。普通 AI 可能使用已核验资料、明确标注的专业草案及经整理的创作者观点；创作者观点不能替代学术证据。备赛资料库中仅有公开元数据的创作者视频不会发送给 AI。砺炼不建立账号、不经过自有服务器、不含广告或行为分析。</p><p>本应用只面向18岁以上健康成年人，不提供疾病、疼痛、伤病、术后、慢病、孕产、药物或康复建议，也不替代医生、注册营养师、持证备赛教练或其他专业人士。备赛功能不提供利尿、药物、极端脱水或电解质操控方案。</p></article></dialog>
   <div class="toast" id="toast" role="status"></div>
 </body>
 </html>

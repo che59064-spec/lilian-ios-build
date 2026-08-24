@@ -45,6 +45,7 @@ jobs:
           set -euo pipefail
           app="$RUNNER_TEMP/Lilian.xcarchive/Products/Applications/App.app"
           test -d "$app"
+          test -d "$app/PlugIns/RestTimerWidget.appex"
           mkdir -p "$RUNNER_TEMP/ipa/Payload"
           cp -R "$app" "$RUNNER_TEMP/ipa/Payload/App.app"
           cd "$RUNNER_TEMP/ipa"
