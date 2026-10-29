@@ -26,6 +26,8 @@
 	<true/>
 	<key>NSSupportsLiveActivities</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>用于您主动开启的动作校对，在本机识别人体关键点并比较参考姿态。画面不录制、不上传。</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#0f1511">
+  <meta name="theme-color" content="#03100d">
   <meta name="color-scheme" content="dark light">
   <meta name="description" content="砺炼：面向健康成年人的循证健身知识、AI问答与训练记录工具">
   <title>砺炼</title>
-  <script type="module" crossorigin src="./assets/index-CID1Ag-q.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-d0UKZz0H.css">
+  <script type="module" crossorigin src="./assets/index-Czs0IiTU.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-DRdI7WZ_.css">
 </head>
 <body>
   <div class="app" id="app" aria-busy="true">
@@ -31,7 +31,7 @@
         </div>
 
         <section class="section-block" aria-labelledby="plansTitle">
-          <div class="section-head"><div><span class="section-label">YOUR PLAN</span><h2 id="plansTitle">训练计划</h2></div><button class="button primary" id="generatePlan">AI 生成计划</button></div>
+          <div class="section-head"><div><span class="section-label">YOUR PLAN</span><h2 id="plansTitle">训练计划</h2></div><button class="button primary" id="generatePlan"><i class="ph ph-sparkle" aria-hidden="true"></i>AI 生成计划</button></div>
           <div class="plan-list" id="planList"></div>
         </section>
       </section>
@@ -60,28 +60,71 @@
           </div>
           <form class="composer" id="chatForm">
             <textarea id="chatInput" maxlength="5000" rows="2" placeholder="输入健康成人训练问题…" aria-label="输入健身问题"></textarea>
-            <button class="send-button" type="submit" aria-label="发送问题">↑</button>
+            <button class="send-button" type="submit" aria-label="发送问题"><i class="ph ph-paper-plane-tilt" aria-hidden="true"></i></button>
           </form>
           <p class="boundary-copy">仅面向18岁以上健康成年人，不提供疼痛、伤病或康复建议。</p>
-          <details class="sources-panel" id="sourcesPanel"><summary>本轮知识依据 <span id="sourceCount">0</span></summary><div id="sourceList"></div></details>
+          <details class="sources-panel" id="sourcesPanel"><summary>本轮资料依据 <span id="sourceCount">0</span></summary><div id="sourceList"></div></details>
         </section>
       </section>
 
       <section class="view" id="knowledgeView" aria-labelledby="knowledgeTitle">
-        <div class="page-heading"><span class="section-label">OFFLINE KNOWLEDGE</span><h1 id="knowledgeTitle">本机知识库</h1><p>包括已核验内容、专业草案、学术来源草案和经整理的创作者观点；每条资料都会显示审核状态。</p></div>
-        <label class="search-box"><span>⌕</span><input id="knowledgeSearch" type="search" placeholder="搜索训练、动作、营养或证据" autocomplete="off"></label>
+        <div class="page-heading"><span class="section-label">OFFLINE KNOWLEDGE</span><h1 id="knowledgeTitle">本机知识库</h1><p>按训练主题整理资料，每条内容均标明审核状态；未核验观点不等于事实结论。</p></div>
+        <label class="search-box"><i class="ph ph-magnifying-glass" aria-hidden="true"></i><input id="knowledgeSearch" type="search" placeholder="搜索训练、动作、营养或证据" autocomplete="off"></label>
         <div class="filter-chips" id="knowledgeFilters" aria-label="知识分类"></div>
         <div class="knowledge-meta"><span id="contentVersion">内容版本 —</span><span id="knowledgeResultCount">0 篇</span></div>
         <div class="knowledge-list" id="knowledgeList"></div>
       </section>
 
       <section class="view" id="trainingView" aria-labelledby="trainingTitle">
-        <div class="page-heading"><span class="section-label">TRAINING</span><h1 id="trainingTitle">训练</h1><p id="trainingModeDescription">正常训练与健美备赛独立记录，互不混用。</p></div>
+        <div class="page-heading"><span class="section-label">TRAINING</span><h1 id="trainingTitle">训练</h1><p id="trainingModeDescription">记录动作、组数、负重、休息计时和训练历史。</p></div>
 
         <nav class="training-mode-switch" id="trainingModeSwitch" aria-label="选择训练模式">
           <button class="training-mode-button active" type="button" data-training-mode="workout" aria-controls="normalTrainingPanel" aria-pressed="true"><b>正常训练</b><small>组数、动作、计时与历史</small></button>
+          <button class="training-mode-button" type="button" data-training-mode="nutrition" aria-controls="nutritionTrainingPanel" aria-pressed="false"><b>饮食记录</b><small>食物、热量与照片</small></button>
           <button class="training-mode-button" type="button" data-training-mode="prep" aria-controls="contestPrepPanel" aria-pressed="false"><b>健美备赛</b><small>AI计划、阶段数轴与赛周指南</small></button>
+          <button class="training-mode-button" type="button" data-training-mode="pose" aria-controls="poseTrainingPanel" aria-pressed="false"><b>动作校对</b><small>自动检查可见动作指标</small></button>
         </nav>
+
+        <div class="training-mode-panel" id="poseTrainingPanel" hidden>
+          <section class="card pose-card" aria-labelledby="poseTitle">
+            <div class="card-head"><div><h2 id="poseTitle">动作校对</h2><p class="muted">选择动作并开启摄像头，自动检查可见动作指标，查看具体纠正提示。</p></div><span class="provider-chip">本机处理</span></div>
+            <div class="pose-setup">
+              <label class="full" for="poseExercise">选择动作<select id="poseExercise" aria-describedby="poseScope"></select></label>
+              <label for="poseSide">观察身体一侧<select id="poseSide"><option value="left">左侧</option><option value="right">右侧</option></select></label>
+              <label for="poseFacing">摄像头<select id="poseFacing"><option value="environment">后置摄像头</option><option value="user">前置摄像头</option></select></label>
+            </div>
+            <p class="pose-scope" id="poseScope">动作库全部动作均可选择。按所选动作逐项检查可见指标；遮挡、视角不足或超出识别范围时，明确显示“无法判断”。</p>
+            <div id="poseGuide" class="pose-guide"></div>
+            <label class="check-row"><input id="poseConsent" type="checkbox"><span>同意开启本机相机<small>点击开始后才请求相机权限。画面和关键点仅在内存处理，不录制、不上传；离开页面或进入后台即关闭。</small></span></label>
+            <div class="pose-camera-actions"><button class="button primary" id="poseStart" type="button">开启自动检查</button><button class="button ghost" id="poseStop" type="button" disabled>关闭相机</button></div>
+            <div class="pose-camera-frame">
+              <video id="poseVideo" autoplay muted playsinline aria-label="本机动作摄像预览"></video>
+              <canvas id="poseCanvas" aria-label="人体关键点与关节连线"></canvas>
+            </div>
+            <p id="poseStatus" class="pose-status" role="status">相机尚未开启。请在光线充足处固定手机，让全身进入画面。</p>
+            <section id="poseAssessment" class="pose-assessment" aria-labelledby="poseAssessmentTitle">
+              <h3 id="poseAssessmentTitle">自动检查可见动作指标</h3>
+              <p id="poseAssessmentMessage" class="pose-assessment-message" aria-live="polite">开启摄像头后，这里会逐项显示检查结果和纠正提示。</p>
+              <div class="pose-auto-progress"><strong id="poseAutoRepCount" hidden>0</strong><p>检查状态 <span id="poseAutoStage">等待画面</span></p></div>
+              <div id="poseChecks" class="pose-checks"><article class="pose-check" data-state="pending"><h4>等待检查 · 全身进入画面</h4><p>按上方拍摄提示固定手机，开启摄像头后开始动作。</p><small>未检测到可用画面，暂不判断。</small></article></div>
+              <p class="pose-assessment-note">“已检查项暂未发现明显偏差”仅限已检查指标，不代表整体动作正确或安全。</p>
+            </section>
+            <div id="poseLimits" class="pose-limits"></div>
+            <details class="pose-reference-options">
+              <summary>可选：与已确认的姿态比较</summary>
+              <p class="muted">自动检查无需标定。需要比较个人参考姿态时，可在此记录起点和终点。</p>
+              <label class="check-row"><input id="poseReferenceConsent" type="checkbox"><span>参考姿态已由本人或教练确认<small>自行标定的参考不代表专业标准；接近参考不等于动作正确或安全。</small></span></label>
+              <div class="pose-setup"><label class="full pose-tolerance" for="poseTolerance">参考角度比较容差 <span><span id="poseToleranceValue">15</span>°</span><input id="poseTolerance" type="range" min="5" max="35" value="15" step="1" aria-describedby="poseToleranceHelp"></label></div>
+              <p class="muted" id="poseToleranceHelp">仅影响与参考姿态的比较，不改变自动检查规则，也不是安全标准。</p>
+              <div class="pose-reference-controls" aria-label="参考姿态标定"><button class="button ghost" id="poseCaptureStart" type="button" disabled>标定起点</button><button class="button ghost" id="poseCaptureEnd" type="button" disabled>标定终点</button><button class="button ghost" id="poseReset" type="button">重置参考</button></div>
+              <p class="muted">使用轻负荷或徒手，分别保持起始姿态和末端姿态并点击标定。手机位置、观察侧或镜头角度改变后重新标定。</p>
+              <div class="pose-observation"><p>参考往返次数 <strong id="poseRepCount">0</strong></p><small>仅统计参考区间往返，不是合格次数或动作正确率。</small></div>
+              <div id="poseFeedback" class="pose-feedback" aria-live="polite">尚未标定参考姿态。</div>
+              <div id="poseMetrics" class="pose-metrics"></div>
+            </details>
+            <p class="pose-boundary">单个手机镜头无法判断肌肉发力、器械负重、关节受力或疼痛原因。出现疼痛、眩晕或不适时停止训练，请由合格专业人士评估。</p>
+          </section>
+        </div>
 
         <div class="training-mode-panel" id="contestPrepPanel" hidden>
         <section class="card prep-card" id="contestPrep" aria-labelledby="prepTitle">
@@ -105,8 +148,8 @@
 
           <details class="prep-library" id="prepLibrary" open>
             <summary><span>备赛资料库</span><small id="prepKnowledgeTotal">正在载入…</small></summary>
-            <p class="prep-library-boundary">指南与论文草案会以“待复核”背景用于备赛 AI；创作者视频是待审核来源，不等于事实结论，也不会发送给 AI。</p>
-            <label class="search-box prep-search"><span>⌕</span><input id="prepKnowledgeSearch" type="search" placeholder="搜索减脂、训练、脱水、充碳、造型或创作者" autocomplete="off"></label>
+            <p class="prep-library-boundary">指南与论文草案会以“待复核”背景用于备赛 AI；视频资料仅作为待审核线索，不等于事实结论，也不会发送给 AI。</p>
+            <label class="search-box prep-search"><i class="ph ph-magnifying-glass" aria-hidden="true"></i><input id="prepKnowledgeSearch" type="search" placeholder="搜索减脂、训练、充碳或造型等主题" autocomplete="off"></label>
             <div class="filter-chips prep-filters" id="prepKnowledgeFilters" aria-label="备赛资料分类"></div>
             <div class="knowledge-meta"><span id="prepKnowledgeState">0 条资料</span><span>最多显示 60 条</span></div>
             <div class="prep-knowledge-list" id="prepKnowledgeList"></div>
@@ -147,6 +190,39 @@
         </section>
         </div>
 
+        <div class="training-mode-panel" id="nutritionTrainingPanel" hidden>
+          <div class="mode-panel-heading"><span class="section-label">NUTRITION LOG</span><h2>饮食记录</h2><p>所有食物、热量和照片只保存在当前设备。</p></div>
+          <label class="nutrition-date">查看日期<input id="nutritionDate" type="date" required></label>
+          <div class="training-stats nutrition-stats">
+            <div><strong id="nutritionCalories">0</strong><span>kcal</span></div><div><strong id="nutritionEntryCount">0</strong><span>条记录</span></div><div><strong id="nutritionMealCount">0</strong><span>个餐次</span></div>
+          </div>
+
+          <section class="section-block nutrition-presets-section">
+            <div class="section-head"><div><span class="section-label">QUICK FOOD</span><h2>常用食物图片</h2></div></div>
+            <p class="nutrition-help">点击只会带入食物名和图片；热量请按实际份量或包装标注填写。</p>
+            <div class="food-preset-grid" id="foodPresetGrid"></div>
+          </section>
+
+          <form class="card nutrition-form" id="nutritionForm">
+            <div class="card-head"><div><span class="section-label">ADD MEAL</span><h2>添加饮食</h2></div></div>
+            <div class="field-grid">
+              <label>餐次<select id="nutritionMeal" required><option>早餐</option><option>午餐</option><option>晚餐</option><option>加餐</option></select></label>
+              <label>热量 kcal<input id="nutritionKcal" type="number" min="0" max="5000" step="1" inputmode="numeric" required placeholder="例如 520"></label>
+              <label class="full">食物名称<input id="nutritionFood" maxlength="60" required placeholder="例如：米饭、鸡肉和西兰花"></label>
+            </div>
+            <input class="file-input" id="nutritionPhoto" type="file" accept="image/*" capture="environment">
+            <label class="nutrition-photo-picker" for="nutritionPhoto">
+              <img id="nutritionPhotoPreview" alt="待保存的饮食照片预览" hidden>
+              <span><b>拍照或选择图片</b><small>将在本机压缩后保存，不会上传</small></span>
+            </label>
+            <button class="text-button danger nutrition-photo-clear" id="clearNutritionPhoto" type="button" hidden>清除已选图片</button>
+            <button class="button primary full" type="submit">＋ 保存饮食记录</button>
+          </form>
+
+          <section class="section-block"><div class="section-head"><div><span class="section-label">DAILY LOG</span><h2 id="nutritionHistoryTitle">今日饮食</h2></div></div><div id="nutritionHistory" class="nutrition-history"></div></section>
+          <p class="asset-credit">预设食物图片来自 Google Noto Emoji（Apache 2.0）。</p>
+        </div>
+
         <div class="training-mode-panel" id="normalTrainingPanel">
         <div class="mode-panel-heading"><span class="section-label">NORMAL TRAINING</span><h2>正常训练</h2><p id="workoutStartedAt">添加第一组后开始计时</p></div>
         <div class="training-stats">
@@ -181,6 +257,12 @@
 
       <section class="view" id="profileView" aria-labelledby="profileTitle">
         <div class="page-heading"><span class="section-label">LOCAL PROFILE</span><h1 id="profileTitle">我的</h1><p>档案、计划和训练记录只保存在当前设备。</p></div>
+
+        <section class="card appearance-card" aria-labelledby="appearanceTitle">
+          <div class="card-head"><h2 id="appearanceTitle">外观</h2></div>
+          <label for="glassAppearance">界面材质<select id="glassAppearance"><option value="system">跟随系统</option><option value="glass">液态玻璃</option><option value="solid">减少透明度</option></select></label>
+          <p class="muted">液态玻璃呈现透明折射与边缘高光；减少透明度可让内容更清晰。</p>
+        </section>
 
         <form class="card profile-form" id="profileForm">
           <div class="card-head"><div><span class="section-label">PROFILE</span><h2>训练档案</h2></div><span id="profileState" class="muted">未保存</span></div>
@@ -219,16 +301,17 @@
     </main>
 
     <nav class="bottom-nav" aria-label="主要功能">
-      <button class="active" data-view="home"><span>✦</span><b>首页</b></button>
-      <button data-view="knowledge"><span>▤</span><b>知识</b></button>
-      <button class="ai-tab" data-view="ai" aria-label="AI 提问"><span class="nav-mascot" aria-hidden="true"><img class="mascot-idle" src="./ai-mascot/dumbbell-idle.png" alt=""><img class="mascot-active" src="./ai-mascot/dumbbell-active.png" alt=""></span><b>AI</b></button>
-      <button data-view="training"><span>◫</span><b>训练</b></button>
-      <button data-view="profile"><span>◎</span><b>我的</b></button>
+      <span class="nav-selection" aria-hidden="true"></span>
+      <button class="active" data-view="home" aria-current="page"><i class="ph ph-house" aria-hidden="true"></i><b>首页</b></button>
+      <button data-view="knowledge"><i class="ph ph-notebook" aria-hidden="true"></i><b>知识</b></button>
+      <button data-view="ai" aria-label="AI 提问"><i class="ph ph-sparkle" aria-hidden="true"></i><b>AI</b></button>
+      <button data-view="training"><i class="ph ph-barbell" aria-hidden="true"></i><b>训练</b></button>
+      <button data-view="profile"><i class="ph ph-user" aria-hidden="true"></i><b>我的</b></button>
     </nav>
   </div>
 
-  <dialog id="knowledgeDialog" class="sheet-dialog"><article><button class="dialog-close" data-close-dialog aria-label="关闭">×</button><div id="knowledgeArticle"></div></article></dialog>
-  <dialog id="privacyDialog" class="sheet-dialog"><article><button class="dialog-close" data-close-dialog aria-label="关闭">×</button><span class="section-label">PRIVACY & BOUNDARY</span><h2>隐私说明与内容边界</h2><p>档案、训练计划、备赛计划、训练记录和分析报告保存在本机。API Key 存入系统安全存储，仅在调用所选模型时作为鉴权信息发送给该服务商。</p><p>取得新版同意后，AI 请求会将问题、命中的知识片段、训练或备赛计划所需档案与备赛字段，以及训练结束后自动分析所需的目标和训练记录直接发送给所选服务商。普通 AI 可能使用已核验资料、明确标注的专业草案及经整理的创作者观点；创作者观点不能替代学术证据。备赛资料库中仅有公开元数据的创作者视频不会发送给 AI。砺炼不建立账号、不经过自有服务器、不含广告或行为分析。</p><p>本应用只面向18岁以上健康成年人，不提供疾病、疼痛、伤病、术后、慢病、孕产、药物或康复建议，也不替代医生、注册营养师、持证备赛教练或其他专业人士。备赛功能不提供利尿、药物、极端脱水或电解质操控方案。</p></article></dialog>
+  <dialog id="knowledgeDialog" class="sheet-dialog"><article><button class="dialog-close" data-close-dialog aria-label="关闭"><i class="ph ph-x" aria-hidden="true"></i></button><div id="knowledgeArticle"></div></article></dialog>
+  <dialog id="privacyDialog" class="sheet-dialog"><article><button class="dialog-close" data-close-dialog aria-label="关闭"><i class="ph ph-x" aria-hidden="true"></i></button><span class="section-label">PRIVACY & BOUNDARY</span><h2>隐私说明与内容边界</h2><p>档案、训练计划、备赛计划、训练记录、饮食热量与照片、分析报告保存在本机。饮食记录与照片不会发送给 AI。API Key 存入系统安全存储，仅在调用所选模型时作为鉴权信息发送给该服务商。</p><p>动作校对仅在勾选本机相机同意并主动点击“开启自动检查”后请求相机权限，不请求麦克风。画面、人体关键点和参考姿态仅在内存中处理，不录制、不上传，也不会发送给模型服务商。关闭相机、离开动作校对或进入后台会停止相机；参考姿态在重置或页面重载后清除。自动检查仅涵盖页面列出的可见条件；暂未发现偏差不代表整体动作正确或安全。自行标定参考是可选工具。</p><p>取得新版同意后，AI 请求会将问题、命中的知识片段、训练或备赛计划所需档案与备赛字段，以及训练结束后自动分析所需的目标和训练记录直接发送给所选服务商。普通 AI 可能使用已核验资料、明确标注的专业草案及经整理的未核验观点；未核验观点不能替代学术证据。备赛资料库中仅有公开元数据的视频资料不会发送给 AI。砺炼不建立账号、不经过自有服务器、不含广告或行为分析。</p><p>本应用只面向18岁以上健康成年人，不提供疾病、疼痛、伤病、术后、慢病、孕产、药物或康复建议，也不替代医生、注册营养师、持证备赛教练或其他专业人士。备赛功能不提供利尿、药物、极端脱水或电解质操控方案。</p></article></dialog>
   <div class="toast" id="toast" role="status"></div>
 </body>
 </html>
