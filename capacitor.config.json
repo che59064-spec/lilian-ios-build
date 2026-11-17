@@ -1,6 +1,6 @@
 {
   "appId": "cn.lilian.fitness",
-  "appName": "砺炼",
+  "appName": "山水校园",
   "webDir": "fitness-web/dist",
   "bundledWebRuntime": false,
   "server": {
